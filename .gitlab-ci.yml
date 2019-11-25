@@ -1,0 +1,53 @@
+stages:
+- build
+- docker
+- deploy
+
+
+build:
+  stage: build
+  image: maven:3.6-jdk-11-slim
+  script: 
+  - mvn clean package
+  artifacts:
+    when: on_success
+    paths:
+    - ./target/
+  tags:
+  - altemista_runner
+
+dockerBuildAny:
+  stage: docker
+  image: docker:19
+  script:
+  - docker build -t nge/nge-example-server:$CI_COMMIT_SHA .
+  dependencies:
+  - build
+  tags:
+  - altemista_runner
+
+dockerBuildMaster:
+  stage: docker
+  image: docker:19
+  script:
+  - docker build -t nge/nge-example-server:latest .
+  dependencies:
+  - build
+  tags:
+  - altemista_runner
+#  only:
+#  - master
+
+dockerPushMaster:
+  stage: docker
+  image: docker:19
+  script:
+  - docker login $CI_REGISTRY_URL -u nrp -p $X_GITLAB_REGISTRY_TOKEN
+  - docker build -t $CI_REGISTRY_URL/nge/nge-example-server:latest .
+  - docker push $CI_REGISTRY_URL/nge/nge-example-server:latest
+  dependencies:
+  - build
+  tags:
+  - altemista_runner
+#  only:
+#  - master

@@ -43,10 +43,27 @@ dockerPushMaster:
   image: docker:19
   script:
   - docker login $CI_REGISTRY_URL -u nrp -p $X_GITLAB_REGISTRY_TOKEN
-  - docker build -t $CI_REGISTRY_URL/nge/nge-example-server:latest .
-  - docker push $CI_REGISTRY_URL/nge/nge-example-server:latest
+  - docker build -t $CI_REGISTRY_URL/nge/nge-example-server:$CI_COMMIT_SHORT_SHA .
+  - docker push $CI_REGISTRY_URL/nge/nge-example-server:$CI_COMMIT_SHORT_SHA
   dependencies:
   - build
+  tags:
+  - altemista_runner
+#  only:
+#  - master
+
+kubernetesDeploy:
+  stage: deploy
+  image: ngerp/kubectl:latest
+  before_script:
+  - echo "$K8S_API_CA" > "./kube.ca.pem"
+  - sed -i -e "s/###IMAGE###/registry.altemista.cloud\/nge\/nge-example-server\:$CI_COMMIT_SHORT_SHA/g" ./deployment.yaml
+  - cat ./deployment.yaml
+  - cat ./kube.ca.pem
+  script:
+  - if kubectl --server "$K8S_API_URL" --token "$K8S_API_TOKEN" --certificate-authority="./kube.ca.pem" get ns $X_PROJECT_NAMESPACE; then echo "Namespace already exists"; else kubectl --server "$K8S_API_URL" --token "$K8S_API_TOKEN" --certificate-authority="./kube.ca.pem" create ns $X_PROJECT_NAMESPACE ; fi 
+  - if kubectl get secret $CI_PROJECT_NAME -n $X_PROJECT_NAMESPACE; then echo "Secret exists"; else kubectl create secret docker-registry $CI_PROJECT_NAME --docker-server=https://$CI_REGISTRY_URL/ --docker-username=nrp --docker-password=$X_GITLAB_REGISTRY_TOKEN_RO ; fi
+  - kubectl apply -f deployment.yaml -n $X_PROJECT_NAMESPACE
   tags:
   - altemista_runner
 #  only:

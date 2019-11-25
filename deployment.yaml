@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: nge-example-server
+  name: nge-example-server
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      run: nge-example-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: nge-example-server
+    spec:
+      containers:
+      - image: ###IMAGE### 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        name: nge-example-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nge-example-server
+  name: nge-example-server
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nge-example-server
+  type: ClusterIP

@@ -28,6 +28,8 @@ spec:
         ports:
         - containerPort: 8080
         name: nge-example-server
+      imagePullSecrets:
+      - name: ###PULLSECRET###
 ---
 apiVersion: v1
 kind: Service

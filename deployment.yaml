@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: nge-example-server
+  name: nge-example-server
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nge-example-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nge-example-server
+    spec:
+      containers:
+      - image: ###IMAGE### 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        name: nge-example-server
+      imagePullSecrets:
+      - name: ###PULLSECRET###
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nge-example-server
+  name: nge-example-server
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: nge-example-server
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nge-example-server
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: "sample.nge.altemista.cloud"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: nge-example-server 
+              servicePort: 8080

@@ -65,17 +65,17 @@
 		</plugins>
 	</build>
 
-	<distributionManagement>
+	<repositories>
 		<repository>
 			<id>central</id>
 			<name>artifactory-0-releases</name>
 			<url>https://artifactory.nge.altemista.cloud/artifactory/nge-example-client</url>
 		</repository>
-		<snapshotRepository>
+		<repository>
 			<id>snapshots</id>
 			<name>artifactory-0-snapshots</name>
 			<url>https://artifactory.nge.altemista.cloud/artifactory/nge-example-client</url>
-		</snapshotRepository>
-	</distributionManagement>
+		</repository>
+	</repositories>
 
 </project>

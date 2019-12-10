@@ -39,6 +39,8 @@ dockerBuildAny:
   - buildCode
   tags:
   - altemista_runner
+  except:
+  - master
 
 dockerPushMaster:
   stage: publishDocker

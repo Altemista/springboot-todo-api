@@ -1,12 +1,14 @@
 stages:
-- build
-- docker
+- buildCode
+- publishCode
+- buildDocker
+- publishDocker
 - deploy
 
 
-build:
-  stage: build
-  image: maven:3.6-jdk-11-slim
+buildCode:
+  stage: buildCode
+  image: ngerp/maven:latest
   script: 
   - mvn clean package
   artifacts:
@@ -16,25 +18,39 @@ build:
   tags:
   - altemista_runner
 
+publishCode:
+  stage: publishCode
+  image: ngerp/maven:latest
+  script:
+  - artifact=$(ls target/*.jar); mvn deploy:deploy-file -Durl=$X_ARTIFACTORY_URL/example-project -DrepositoryId=central -Dfile=$artifact -DgroupId=com.nttdata.nge.example-project -DartifactId=nge-example-server -Dversion=0.1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true -e -X
+  dependencies:
+  - buildCode
+  tags:
+  - altemista_runner
+  only:
+  - master
+
 dockerBuildAny:
-  stage: docker
+  stage: buildDocker
   image: docker:19
   script:
   - docker build -t nge/nge-example-server:$CI_COMMIT_SHA .
   dependencies:
-  - build
+  - buildCode
   tags:
   - altemista_runner
+  except:
+  - master
 
 dockerPushMaster:
-  stage: docker
+  stage: publishDocker
   image: docker:19
   script:
   - docker login $CI_REGISTRY_URL -u nrp -p $X_GITLAB_REGISTRY_TOKEN
   - docker build -t $CI_REGISTRY_URL/nge/nge-example-server:$CI_COMMIT_SHORT_SHA .
   - docker push $CI_REGISTRY_URL/nge/nge-example-server:$CI_COMMIT_SHORT_SHA
   dependencies:
-  - build
+  - buildCode
   tags:
   - altemista_runner
   only:

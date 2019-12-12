@@ -10,7 +10,7 @@ buildCode:
   stage: buildCode
   image: ngerp/maven:latest
   script: 
-  - mvn clean package
+  - mvn clean package -B
   artifacts:
     when: on_success
     paths:

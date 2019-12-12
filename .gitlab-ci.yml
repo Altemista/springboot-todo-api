@@ -10,7 +10,7 @@ buildCode:
   stage: buildCode
   image: ngerp/maven:latest
   script: 
-  - mvn clean package
+  - mvn clean package -B
   artifacts:
     when: on_success
     paths:
@@ -22,7 +22,7 @@ publishCode:
   stage: publishCode
   image: ngerp/maven:latest
   script:
-  - artifact=$(ls target/*.jar); mvn deploy:deploy-file -Durl=$X_ARTIFACTORY_URL/example-project -DrepositoryId=central -Dfile=$artifact -DgroupId=com.nttdata.nge.example-project -DartifactId=nge-example-server -Dversion=0.1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true -e -X
+  - artifact=$(ls target/*.jar); mvn deploy:deploy-file -Durl=$X_ARTIFACTORY_URL/example-project -DrepositoryId=central -Dfile=$artifact -DgroupId=com.nttdata.nge.example-project -DartifactId=nge-example-server -Dversion=0.1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true -e -X -B
   dependencies:
   - buildCode
   tags:

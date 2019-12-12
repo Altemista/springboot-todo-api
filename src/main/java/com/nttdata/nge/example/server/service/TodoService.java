@@ -6,7 +6,9 @@ import com.nttdata.nge.example.server.entity.TodoEntity;
 
 public interface TodoService {
 	
-	void add(TodoEntity entity);
+	TodoEntity add(TodoEntity entity);
+	
+	void delete(long id);
 	
 	List<TodoEntity> getAll();
 

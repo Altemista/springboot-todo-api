@@ -15,13 +15,18 @@ public class TodoServiceBean implements TodoService {
 	private TodoRepository todoRepository;
 
 	@Override
-	public void add(TodoEntity entity) {
-		todoRepository.save(entity);
+	public TodoEntity add(TodoEntity entity) {
+		return todoRepository.save(entity);
 	}
 
 	@Override
 	public List<TodoEntity> getAll() {
 		return todoRepository.findAll();
+	}
+
+	@Override
+	public void delete(long id) {
+		todoRepository.deleteById(id);
 	}
 
 }

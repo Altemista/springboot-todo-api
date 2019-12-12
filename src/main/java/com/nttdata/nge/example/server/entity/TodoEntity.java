@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.nttdata.nge.example.server.model.Todo;
+
 @Entity
 @Table
 public class TodoEntity {
@@ -55,7 +57,18 @@ public class TodoEntity {
 	public void setPriority(Long priority) {
 		this.priority = priority;
 	}
-	
-	
+
+	public Todo toTodo() {
+		return new Todo(id, title, completed, priority);
+	}
+
+	public static TodoEntity fromTodo(Todo todo) {
+		TodoEntity entity = new TodoEntity();
+		entity.setId(todo.getId());
+		entity.setCompleted(todo.isCompleted());
+		entity.setPriority(todo.getOrder());
+		entity.setTitle(todo.getTitle());
+		return entity;
+	}
 
 }

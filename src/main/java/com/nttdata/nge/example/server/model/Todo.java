@@ -6,16 +6,22 @@ import java.util.Optional;
 
 public class Todo {
 
+	private final long id;
 	private final String title;
 	private final boolean completed;
-	private final Long order;
+	private final long order;
 
 	@JsonCreator
-	public Todo(@JsonProperty("title") String title, @JsonProperty(value = "completed") boolean completed,
-			@JsonProperty(value = "order") long order) {
+	public Todo(@JsonProperty("id") long id, @JsonProperty("title") String title,
+			@JsonProperty(value = "completed") boolean completed, @JsonProperty(value = "order") long order) {
+		this.id = id;
 		this.title = title;
 		this.completed = completed;
 		this.order = order;
+	}
+	
+	public long getId() {
+		return id;
 	}
 
 	public String getTitle() {
@@ -36,7 +42,8 @@ public class Todo {
 	}
 
 	public Todo merge(Todo updatedTodo) {
-		return new Todo(Optional.ofNullable(updatedTodo.title).orElse(title), updatedTodo.completed,
+		return new Todo(Optional.ofNullable(updatedTodo.id).orElse(id),
+				Optional.ofNullable(updatedTodo.title).orElse(title), updatedTodo.completed,
 				Optional.ofNullable(updatedTodo.order).orElse(order));
 	}
 }

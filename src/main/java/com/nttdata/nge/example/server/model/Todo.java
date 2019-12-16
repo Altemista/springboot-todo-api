@@ -9,11 +9,11 @@ public class Todo {
 	private final long id;
 	private final String title;
 	private final boolean completed;
-	private final long order;
+	private final int order;
 
 	@JsonCreator
 	public Todo(@JsonProperty("id") long id, @JsonProperty("title") String title,
-			@JsonProperty(value = "completed") boolean completed, @JsonProperty(value = "order") long order) {
+			@JsonProperty(value = "completed") boolean completed, @JsonProperty(value = "order") int order) {
 		this.id = id;
 		this.title = title;
 		this.completed = completed;
@@ -32,7 +32,7 @@ public class Todo {
 		return completed;
 	}
 
-	public long getOrder() {
+	public int getOrder() {
 		return order;
 	}
 

@@ -10,21 +10,22 @@ import javax.persistence.Table;
 import com.nttdata.nge.example.server.model.Todo;
 
 @Entity
-@Table
+@Table(name = "TODO")
 public class TodoEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(name = "TITLE")
 	private String title;
 
-	@Column
+	@Column(name = "COMPLETED")
 	private boolean completed;
 
-	@Column
-	private Long priority;
+	@Column(name = "PRIO")
+	private Integer priority;
 
 	public Long getId() {
 		return id;
@@ -50,11 +51,11 @@ public class TodoEntity {
 		this.completed = completed;
 	}
 
-	public Long getPriority() {
+	public Integer getPriority() {
 		return priority;
 	}
 
-	public void setPriority(Long priority) {
+	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
 

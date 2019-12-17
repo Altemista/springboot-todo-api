@@ -23,6 +23,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>11</maven.compiler.release>
+		<dependency.testng.version>7.0.0</dependency.testng.version>
 	</properties>
 
 	<dependencies>
@@ -63,8 +64,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${dependency.testng.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

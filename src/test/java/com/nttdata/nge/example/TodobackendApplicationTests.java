@@ -43,7 +43,7 @@ public class TodobackendApplicationTests extends AbstractTestNGSpringContextTest
 	}
 
 	@Test
-	public void andAndRead() throws Exception {
+	public void addAndRead() throws Exception {
 
 		mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(new Todo(0, "testNg", false, 1)))).andExpect(status().isOk());

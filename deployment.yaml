@@ -38,6 +38,7 @@ kind: Service
 metadata:
   labels:
     app: nge-example-server
+    spring-metrics: enabled
   name: nge-example-server
 spec:
   ports:

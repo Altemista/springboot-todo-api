@@ -1,0 +1,12 @@
+spring:
+   jpa.hibernate.ddl-auto: none
+   flyway.locations: classpath:db/migration
+   h2.console.enabled: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "info, health, prometheus"
+

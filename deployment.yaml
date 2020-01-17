@@ -21,12 +21,14 @@ spec:
       creationTimestamp: null
       labels:
         app: nge-example-server
+        spring-metrics: enabled
     spec:
       containers:
       - image: ###IMAGE### 
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+          name: http
         name: nge-example-server
       imagePullSecrets:
       - name: ###PULLSECRET###
@@ -42,6 +44,7 @@ spec:
   - port: 8080
     protocol: TCP
     targetPort: 8080
+    name: http
   selector:
     app: nge-example-server
   type: ClusterIP
@@ -61,3 +64,58 @@ spec:
             backend:
               serviceName: nge-example-server 
               servicePort: 8080
+---
+
+# role required for monitoring to collect metrics
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-k8s
+  namespace: nge-example-server
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+# rolebinding to attach the role to the serviceaccount in the monitoring namespace
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-k8s
+  namespace: nge-example-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: monitoring
+
+---
+
+# servicemonitor: entity to tell the prometheus operator to scrape a certain target
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spring-metrics
+spec:
+  endpoints:
+  - path: /actuator/prometheus
+    port: http
+  jobLabel: spring_metrics
+  selector:
+    matchLabels:
+      spring-metrics: enabled

@@ -49,22 +49,7 @@ spec:
   selector:
     app: nge-example-server
   type: ClusterIP
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: nge-example-server
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-spec:
-  rules:
-    - host: "sample.nge.altemista.cloud"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: nge-example-server 
-              servicePort: 8080
+
 ---
 
 # role required for monitoring to collect metrics

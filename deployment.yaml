@@ -120,3 +120,28 @@ spec:
   selector:
     matchLabels:
       spring-metrics: enabled
+---
+
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  name: nrp-app
+  namespace: nge-example-server
+spec:
+  databases:
+    sampleapp: sample
+  numberOfInstances: 2
+  patroni:
+    pg_hba:
+    - host all all 0.0.0.0/0 md5
+  postgresql:
+    version: "9.6"
+  teamId: nrp
+  users:
+    sample:
+    - login
+    root:
+    - superuser
+    - createdb
+  volume:
+    size: 2Gi

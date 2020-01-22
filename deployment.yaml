@@ -26,6 +26,21 @@ spec:
       containers:
       - image: ###IMAGE### 
         imagePullPolicy: Always
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://nrp-app:5432/sampleapp"
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres.nrp-app.credentials
+              key: username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres.nrp-app.credentials
+              key: password
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: "none"
         ports:
         - containerPort: 8080
           name: http
@@ -126,7 +141,6 @@ apiVersion: acid.zalan.do/v1
 kind: postgresql
 metadata:
   name: nrp-app
-  namespace: nge-example-server
 spec:
   databases:
     sampleapp: sample

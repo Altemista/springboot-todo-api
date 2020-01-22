@@ -205,3 +205,19 @@ spec:
   selector:
     application: spilo
     team: nrp
+
+---
+# servicemonitor: entity to tell the prometheus operator to scrape a certain target
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgres-metrics
+spec:
+  endpoints:
+  - path: /metrics
+    port: exporter
+  jobLabel: postgres_metrics
+  selector:
+    matchLabels:
+      app: pg-exporter

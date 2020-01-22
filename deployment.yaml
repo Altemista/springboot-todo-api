@@ -159,3 +159,49 @@ spec:
     - createdb
   volume:
     size: 2Gi
+  sidecars:
+    - name: "exporter"
+      image: "wrouesnel/postgres_exporter:v0.8.0"
+      ports:
+        - name: exporter
+          containerPort: 9187
+          protocol: TCP
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128M
+        requests:
+          cpu: 100m
+          memory: 128M
+      env:
+        - name: "DATA_SOURCE_URI"
+          value: "nrp-app/sampleapp?sslmode=disable"
+        - name: "DATA_SOURCE_USER"
+          valueFrom:
+            secretKeyRef:
+              name: postgres.nrp-app.credentials
+              key: username
+        - name: "DATA_SOURCE_PASS"
+          valueFrom:
+            secretKeyRef:
+              name: postgres.nrp-app.credentials
+              key: password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-exporter
+  labels:
+    app: pg-exporter
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+    - name: exporter
+      port: 9187
+      targetPort: exporter
+  selector:
+    application: spilo
+    team: nrp

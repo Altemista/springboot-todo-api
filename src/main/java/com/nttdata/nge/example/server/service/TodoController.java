@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nttdata.nge.example.server.entity.TodoEntity;
 import com.nttdata.nge.example.server.model.Todo;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(methods = { POST, GET, OPTIONS, DELETE, PATCH }, maxAge = 3600, allowedHeaders = { "x-requested-with",
 		"origin", "content-type", "accept" }, origins = "*")
@@ -28,7 +33,11 @@ public class TodoController {
 	@Autowired
 	private TodoService todoService;
 
-	@RequestMapping(method = GET)
+	@ApiOperation(httpMethod = "GET", value = "Returns all Todos", nickname = "listAllTodos", tags = { "Todo" })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = ""),
+			@ApiResponse(code = 400, message = "No Todos found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	@RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Collection<Todo> listAll() {
 		System.out.println("TodoController.listAll()");
 

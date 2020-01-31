@@ -81,6 +81,10 @@ spec:
           backend:
             serviceName: nge-example-server 
             servicePort: 8080
+        - path: /swagger-ui.html
+          backend:
+            serviceName: nge-example-server
+            servicePort: 8080
 ---
 
 # role required for monitoring to collect metrics

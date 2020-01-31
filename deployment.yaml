@@ -85,6 +85,10 @@ spec:
           backend:
             serviceName: nge-example-server
             servicePort: 8080
+        - path: /webjars
+          backend:
+            serviceName: nge-example-server
+            servicePort: 8080
 ---
 
 # role required for monitoring to collect metrics

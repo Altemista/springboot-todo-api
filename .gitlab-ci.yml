@@ -1,8 +1,8 @@
 stages:
 - buildCode
+- analyzeCode
 - publishCode
 - buildDocker
-- publishDocker
 - deploy
 
 
@@ -15,6 +15,16 @@ buildCode:
     when: on_success
     paths:
     - ./target/
+  tags:
+  - altemista_runner
+
+analyzecode:
+  stage: analyzeCode
+  image: ngerp/sonar-scanner:4.0.0.1744
+  script:
+  - sonar-scanner -Dsonar.sources=src -Dsonar.projectKey=$CI_PROJECT_NAME -Dsonar.host.url=$X_SONAR_URL -Dsonar.password=$X_SONAR_TOKEN -Dsonar.java.binaries=./target -Dsonar.junit.reportPaths=./target/surefire-reports 
+  dependencies:
+  - buildCode
   tags:
   - altemista_runner
 
@@ -43,7 +53,7 @@ dockerBuildAny:
   - master
 
 dockerPushMaster:
-  stage: publishDocker
+  stage: buildDocker 
   image: docker:19
   script:
   - docker login $CI_REGISTRY_URL -u nrp -p $X_GITLAB_REGISTRY_TOKEN

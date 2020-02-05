@@ -74,13 +74,17 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-    - host: "sample.nge.altemista.cloud"
+    - host: "backend.nge.altemista.cloud"
       http:
         paths:
-        - path: /todos
+        - path: /
           backend:
             serviceName: nge-example-server 
             servicePort: 8080
+  tls:
+    - hosts:
+        - backend.nge.altemista.cloud
+      secretName: tls-backend
 ---
 
 # role required for monitoring to collect metrics

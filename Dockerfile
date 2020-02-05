@@ -1,4 +1,4 @@
-FROM openjdk:11-slim
+FROM ngerp/openjdk:11
 
 EXPOSE 8080
 ARG JAR_FILE=target/*.jar

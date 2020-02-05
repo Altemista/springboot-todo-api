@@ -22,7 +22,7 @@ analyzecode:
   stage: analyzeCode
   image: ngerp/sonar-scanner:4.0.0.1744
   script:
-  - sonar-scanner -Dsonar.sources=src -Dsonar.projectKey=$CI_PROJECT_NAME -Dsonar.host.url=$X_SONAR_URL -Dsonar.password=$X_SONAR_TOKEN -Dsonar.java.binaries=./target -Dsonar.junit.reportPaths=./target/surefire-reports 
+  - sonar-scanner -Dsonar.sources=src -Dsonar.projectKey=$CI_PROJECT_NAME -Dsonar.host.url=$X_SONAR_URL -Dsonar.password=$X_SONAR_TOKEN -Dsonar.java.binaries=./target -Dsonar.junit.reportPaths=./target/surefire-reports -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
   dependencies:
   - buildCode
   tags:

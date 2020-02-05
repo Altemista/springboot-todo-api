@@ -74,20 +74,12 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-    - host: "sample.nge.altemista.cloud"
+    - host: "backend.nge.altemista.cloud"
       http:
         paths:
-        - path: /todos
+        - path: /
           backend:
             serviceName: nge-example-server 
-            servicePort: 8080
-        - path: /swagger-ui.html
-          backend:
-            serviceName: nge-example-server
-            servicePort: 8080
-        - path: /webjars
-          backend:
-            serviceName: nge-example-server
             servicePort: 8080
 ---
 

@@ -10,7 +10,7 @@ buildCode:
   stage: buildCode
   image: ngerp/maven:latest
   script: 
-  - mvn clean package -B -Pjacoco
+  - mvn clean package -B -Psoapui,jacoco
   artifacts:
     when: on_success
     paths:

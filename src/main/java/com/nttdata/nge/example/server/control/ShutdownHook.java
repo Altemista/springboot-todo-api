@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class ShutdownHook implements Runnable {
     
-    protected final Log LOG = LogFactory.getLog(getClass());
+    protected final Log log = LogFactory.getLog(getClass());
     
     private final List<WebServer> embeddedContainers = new ArrayList<>();
     private ConfigurableApplicationContext applicationContext;
@@ -68,10 +68,10 @@ public class ShutdownHook implements Runnable {
     public void run() {
 
         if (alreadyExecuted) {
-            LOG.info("Shutdown - was already executed. Skipping.");
+            log.info("Shutdown - was already executed. Skipping.");
             return;
         }
-        LOG.info("Shutdown - started. Existing HTTP sessions and scheduled jobs can finish within: " + shutdownTimeout
+        log.info("Shutdown - started. Existing HTTP sessions and scheduled jobs can finish within: " + shutdownTimeout
                 + " miliseconds.");
         ExecutorService shutdownExecutor = null;
         try {
@@ -86,10 +86,10 @@ public class ShutdownHook implements Runnable {
             try {
                 httpFuture.get(shutdownTimeout, TimeUnit.MILLISECONDS);
             } catch ( ExecutionException | TimeoutException e) {
-                LOG.warn("HTTP graceful shutdown failed", e);
+                log.warn("HTTP graceful shutdown failed", e);
             } catch (InterruptedException interrupted) {
                Thread.currentThread().interrupt();
-               LOG.warn("HTTP graceful shutdown failed", interrupted);
+               log.warn("HTTP graceful shutdown failed", interrupted);
             }
             
         } finally {
@@ -101,29 +101,29 @@ public class ShutdownHook implements Runnable {
     
     private void stopWebsocketSessions() {
     	if (sessions.isPresent()) {
-    		LOG.info("Shutdown - Websocket sessions");
+    		log.info("Shutdown - Websocket sessions");
     		sessions.get().close();
     	}
     }
     
     private void shutdownHttpFilter() {
-        LOG.info("Shutdown - HTTP filter.");
+        log.info("Shutdown - HTTP filter.");
         try {
             filter.shutdown();
         } catch (InterruptedException e) {
-            LOG.warn("Shutdown - shutdownHttpFilter failed", e);
+            log.warn("Shutdown - shutdownHttpFilter failed", e);
             Thread.currentThread().interrupt();
         }
     }
     
     private void shutdownHTTPConnector() {
-        LOG.info("Shutdown - HTTP Connector.");
+        log.info("Shutdown - HTTP Connector.");
         try {
             for (WebServer embeddedServletContainer : embeddedContainers) {
                 embeddedServletContainer.stop();
             }
         } catch (WebServerException e) {
-            LOG.warn("Shutdown - shutdownHTTPConnector failed", e);
+            log.warn("Shutdown - shutdownHTTPConnector failed", e);
         }
     }
     
@@ -132,13 +132,13 @@ public class ShutdownHook implements Runnable {
             try {
                 shutdownExecutor.shutdownNow();
             } catch (SecurityException e) {
-                LOG.warn("Executor shutdown failed", e);
+                log.warn("Executor shutdown failed", e);
             }
         }
     }
     
     private void shutdownApplication() {
-        LOG.info("Shutdown - ApplicationContext");
+        log.info("Shutdown - ApplicationContext");
         applicationContext.close();
     }
     

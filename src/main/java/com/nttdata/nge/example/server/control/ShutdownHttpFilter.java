@@ -35,7 +35,7 @@ public class ShutdownHttpFilter implements Filter {
     private volatile boolean shutdown;
     private CountDownLatch latch;
     
-    protected final Log LOG = LogFactory.getLog(getClass());
+    protected final Log log = LogFactory.getLog(getClass());
     
     private int shutdownTimeout = 60000;
     
@@ -74,7 +74,7 @@ public class ShutdownHttpFilter implements Filter {
                 latch = new CountDownLatch(
                         (int) activeRequestsUpdater.get(this));
             } catch (IllegalArgumentException e) {
-                LOG.debug(e.getMessage());
+                log.debug(e.getMessage());
                 latch = new CountDownLatch(0);
             }
         }
@@ -95,7 +95,7 @@ public class ShutdownHttpFilter implements Filter {
         if (!allFinished) {
             // no further proccessing or hard canceling. The threads could still
             // finish during shutdown.
-            LOG.info(
+            log.info(
                     "Shutdown - Not all http threads finished during timeout. They will be canceled during shutdown.");
         }
         

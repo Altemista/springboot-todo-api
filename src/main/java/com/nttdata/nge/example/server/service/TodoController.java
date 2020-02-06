@@ -55,8 +55,7 @@ public class TodoController {
 
 	@RequestMapping(method = DELETE)
 	public void deleteAll() {
-		System.out.println("TodoController.deleteAll() - not implemented");
-		// TODO MSI
+		todoService.getAll().forEach(t -> delete(t.getId()));
 	}
 
 	@RequestMapping(method = DELETE, value = "/{todo-id}")

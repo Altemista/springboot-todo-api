@@ -38,11 +38,6 @@ public class TodobackendApplicationTests extends AbstractTestNGSpringContextTest
 	}
 
 	@Test
-	public void testPingHomeUrl() throws Exception {
-		mockMvc.perform(get("/home")).andExpect(content().string("home")).andExpect(status().isOk());
-	}
-
-	@Test
 	public void addAndRead() throws Exception {
 
 		mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON)

@@ -55,8 +55,7 @@ public class ShutdownTests extends AbstractTestNGSpringContextTests {
 		shutdownHook.run();
 
 		httpFilter.doFilter(request, response, chain);
-		HttpServletResponse verify = verify(response, atLeast(1));
-		verify.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "SpringBoot shutting down");
+		verify(response, atLeast(1)).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "SpringBoot shutting down");
 	}
 
 }

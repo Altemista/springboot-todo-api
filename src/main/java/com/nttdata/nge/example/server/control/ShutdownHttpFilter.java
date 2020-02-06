@@ -33,7 +33,7 @@ public class ShutdownHttpFilter implements Filter {
     @SuppressWarnings("unused")
     private volatile long activeRequests;
     private volatile boolean shutdown;
-    private volatile CountDownLatch latch;
+    private CountDownLatch latch;
     
     protected final Log LOG = LogFactory.getLog(getClass());
     

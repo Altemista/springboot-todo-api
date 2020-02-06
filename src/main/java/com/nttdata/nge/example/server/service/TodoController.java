@@ -39,16 +39,11 @@ public class TodoController {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	@RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Collection<Todo> listAll() {
-		System.out.println("TodoController.listAll()");
-
 		return todoService.getAll().stream().map(t -> t.toTodo()).collect(Collectors.toList());
 	}
 
 	@RequestMapping(method = POST)
 	public Todo add(@RequestBody Todo todo) {
-		System.out.println("TodoController.add()");
-		System.out.println(todo);
-
 		TodoEntity entity = new TodoEntity();
 		entity.setCompleted(todo.isCompleted());
 		entity.setPriority(todo.getOrder());
@@ -60,13 +55,12 @@ public class TodoController {
 
 	@RequestMapping(method = DELETE)
 	public void deleteAll() {
-		System.out.println("TodoController.deleteAll()");
+		System.out.println("TodoController.deleteAll() - not implemented");
 		// TODO MSI
 	}
 
 	@RequestMapping(method = DELETE, value = "/{todo-id}")
 	public void delete(@PathVariable("todo-id") long id) {
-		System.out.println("TodoController.delete(): " + id);
 		todoService.delete(id);
 	}
 

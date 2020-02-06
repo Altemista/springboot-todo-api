@@ -1,10 +1,11 @@
 package com.nttdata.nge.example.server;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.nttdata.nge.example.server.control.StartupWrapper;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -14,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class NgeExampleServer implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(NgeExampleServer.class, args);
+		StartupWrapper.run(NgeExampleServer.class, false, args);
 	}
 
 	@Override

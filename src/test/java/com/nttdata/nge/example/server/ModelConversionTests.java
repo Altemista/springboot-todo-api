@@ -1,4 +1,4 @@
-package com.nttdata.nge.example;
+package com.nttdata.nge.example.server;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

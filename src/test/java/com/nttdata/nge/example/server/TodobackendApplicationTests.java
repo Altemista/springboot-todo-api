@@ -1,4 +1,4 @@
-package com.nttdata.nge.example;
+package com.nttdata.nge.example.server;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

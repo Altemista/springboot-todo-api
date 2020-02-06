@@ -60,8 +60,7 @@ public class StartupWrapper extends SpringApplication {
              * during startup. We want to close the schedulers etc. gracefully in this case as well.
              */
             if (event instanceof ContextClosedEvent) {
-                ShutdownHook registeredHook = applicationContext.getBean(ShutdownHook.class);
-                registeredHook.run();
+                applicationContext.getBean(ShutdownHook.class).run();
             }
         });
         

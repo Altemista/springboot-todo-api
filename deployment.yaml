@@ -127,19 +127,32 @@ subjects:
 ---
 
 # servicemonitor: entity to tell the prometheus operator to scrape a certain target
-
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: spring-metrics
 spec:
   endpoints:
-  - path: /actuator/prometheus
+  - metricRelabelings:
+    - action: replace
+      separator: "\0"
+      sourceLabels:
+      - uri
+      - rest_controller
+      targetLabel: rest_controller
+    - action: replace
+      separator: "\0"
+      sourceLabels:
+      - status
+      - return_code
+      targetLabel: return_code
+    path: /actuator/prometheus
     port: http
-  jobLabel: spring_metrics
+  jobLabel: app
   selector:
     matchLabels:
       spring-metrics: enabled
+
 ---
 
 apiVersion: acid.zalan.do/v1

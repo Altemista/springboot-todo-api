@@ -1,4 +1,4 @@
-FROM ngerp/openjdk:11
+FROM harbor.nge.altemista.cloud/base/openjdk:11
 
 EXPOSE 8080
 ARG JAR_FILE=target/*.jar

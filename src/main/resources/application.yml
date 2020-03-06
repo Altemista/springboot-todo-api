@@ -2,11 +2,13 @@ spring:
    jpa.hibernate.ddl-auto: none
    flyway.locations: classpath:db/migration
    h2.console.enabled: true
-
+   profiles.active: @spring.profiles.active@
 
 management:
   endpoints:
     web:
       exposure:
         include: "info, health, prometheus"
+        
+        
 

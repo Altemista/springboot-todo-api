@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,22 +45,37 @@ public class TodoController {
 		return todoService.getAll().stream().map(t -> t.toTodo()).collect(Collectors.toList());
 	}
 
+	@ApiOperation(httpMethod = "POST", value = "Add a Todo", nickname = "addTodo", tags = { "Todo" })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = ""),
+			@ApiResponse(code = 400, message = "Tried to create a Todo with missing data"),
+			@ApiResponse(code = 500, message = "Internal server error") })
 	@RequestMapping(method = POST)
-	public Todo add(@RequestBody Todo todo) {
+	public ResponseEntity<Todo> add(@RequestBody Todo todo) {
+
+		if (todo.getTitle() == null || todo.getTitle().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
 		TodoEntity entity = new TodoEntity();
 		entity.setCompleted(todo.isCompleted());
 		entity.setPriority(todo.getOrder());
 		entity.setTitle(todo.getTitle());
 		todoService.add(entity);
 
-		return entity.toTodo();
+		return ResponseEntity.ok(entity.toTodo());
 	}
 
+	@ApiOperation(httpMethod = "DELETE", value = "Delete all todos", nickname = "deleteAllTodos", tags = { "Todo" })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = ""),
+			@ApiResponse(code = 500, message = "Internal server error") })
 	@RequestMapping(method = DELETE)
 	public void deleteAll() {
 		todoService.getAll().forEach(t -> delete(t.getId()));
 	}
 
+	@ApiOperation(httpMethod = "DELETE", value = "Delete a single todo", nickname = "deleteTodo", tags = { "Todo" })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = ""),
+			@ApiResponse(code = 404, message = "Could not find the todo-id"),
+			@ApiResponse(code = 500, message = "Internal server error") })
 	@RequestMapping(method = DELETE, value = "/{todo-id}")
 	public ResponseEntity<Void> delete(@PathVariable("todo-id") long id) {
 		try {

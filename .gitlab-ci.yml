@@ -44,7 +44,7 @@ dockerBuildAny:
   stage: buildDocker
   image: docker:19
   script:
-  - docker build -t nge/sourcecode/nge-example-server:$CI_COMMIT_SHA .
+  - docker build -t nge/nge-example-server:$CI_COMMIT_SHA .
   dependencies:
   - buildCode
   tags:
@@ -56,9 +56,9 @@ dockerPushMaster:
   stage: buildDocker 
   image: docker:19
   script:
-  - docker login $CI_REGISTRY_URL -u nrp -p $X_GITLAB_REGISTRY_TOKEN
-  - docker build -t $CI_REGISTRY_URL/nge/sourcecode/nge-example-server:$CI_COMMIT_SHORT_SHA .
-  - docker push $CI_REGISTRY_URL/nge/sourcecode/nge-example-server:$CI_COMMIT_SHORT_SHA
+  - docker login $CI_REGISTRY_URL -u $X_GITLAB_REGISTRY_USER -p $X_GITLAB_REGISTRY_TOKEN
+  - docker build -t $CI_REGISTRY_URL/nge/nge-example-server:$CI_COMMIT_SHORT_SHA .
+  - docker push $CI_REGISTRY_URL/nge/nge-example-server:$CI_COMMIT_SHORT_SHA
   dependencies:
   - buildCode
   tags:
@@ -70,12 +70,12 @@ kubernetesDeploy:
   stage: deploy
   image: ngerp/kubectl:latest
   before_script:
-  - sed -i -e "s/###IMAGE###/registry.altemista.cloud\/nge\/sourcecode\/nge-example-server\:$CI_COMMIT_SHORT_SHA/g" ./deployment.yaml
+  - sed -i -e "s/###IMAGE###/harbor.nge.altemista.cloud\/nge\/nge-example-server\:$CI_COMMIT_SHORT_SHA/g" ./deployment.yaml
   - sed -i -e "s/###PULLSECRET###/$CI_PROJECT_NAME/g" ./deployment.yaml
   - cat ./deployment.yaml
   script:
   - if kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" get ns $X_PROJECT_NAMESPACE; then echo "Namespace already exists"; else kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" create ns $X_PROJECT_NAMESPACE ; fi 
-  - if kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" get secret $CI_PROJECT_NAME -n $X_PROJECT_NAMESPACE; then echo "Secret exists"; else kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" create secret docker-registry $CI_PROJECT_NAME --docker-server=https://$CI_REGISTRY_URL/ --docker-username=nrp --docker-password=$X_GITLAB_REGISTRY_TOKEN_RO -n $X_PROJECT_NAMESPACE; fi
+  - if kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" get secret $CI_PROJECT_NAME -n $X_PROJECT_NAMESPACE; then echo "Secret exists"; else kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" create secret docker-registry $CI_PROJECT_NAME --docker-server=https://$CI_REGISTRY_URL/ --docker-username=$X_GITLAB_REGISTRY_USER_RO --docker-password=$X_GITLAB_REGISTRY_TOKEN_RO -n $X_PROJECT_NAMESPACE; fi
   - kubectl --insecure-skip-tls-verify=true --server "$K8S_API_URL" --token "$K8S_API_TOKEN" apply -f deployment.yaml -n $X_PROJECT_NAMESPACE
   tags:
   - altemista_runner
